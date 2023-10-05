@@ -3,7 +3,7 @@ import { useRef, useState } from "react"
 import { Plot } from "../components"
 
 const Calculator = () => {
-    const { color } = useStateContext()
+    const { color, graph, setGraph } = useStateContext()
     const [angle, setAngle] = useState("")
     const [comp, setComp] = useState("")
     const [mass, setMass] = useState(" ")
@@ -19,13 +19,11 @@ const Calculator = () => {
     const [delta_ys, setDelta_ys] = useState("")
     const [max_y, setMax_y] = useState("")
     const [max_x, setMax_x] = useState("")
+    const [data, setData] = useState([0])
     const Form = useRef(null)
     let delta_y, initial_v, angle_rad
 
-    const data = []
-    for(let i = 0; i < 20; i++){
-        data.push({i, i})
-    }
+    //let data = [{x:0, y:0}, {x:1, y:1}, {x:2, y:2}, {x:3, y:3}]
 
     function solveQuadratic(a, b, c){
         let disc = (b**2) - (4*a*c), x
@@ -34,8 +32,8 @@ const Calculator = () => {
         return x
     }
 
-    function trayectory(x){
-        return (x * Math.tan(angle_rad) + (Number(grav) * (x ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle_rad) ** 2)))
+    function trayectory(x, quad_sol){
+        return (x * Math.tan(quad_sol) + (Number(grav) * (x ** 2)) / (2 * (initial_v ** 2) * (Math.cos(quad_sol) ** 2)))
     }
 
     function safetyCheck(){
@@ -53,11 +51,13 @@ const Calculator = () => {
         setMax_x((initial_v ** 2) / (-1 * Number(grav)))
         setInitial_vs(initial_v.toFixed(2))
         setDelta_ys(delta_y.toFixed(2))
-        let drop_time = (-2 * initial_v * Math.sin(angle_rad)) / Number(grav),
-            lim = initial_v * Math.cos(angle_rad) * drop_time
-        for(let i = 0; i <= lim; i++){
-            data.push({x: i, y: trayectory(i)})
+        let drop_time = (-2 * initial_v * Math.sin(quad_sol)) / Number(grav),
+            lim = initial_v * Math.cos(quad_sol) * drop_time
+        for(let i = 1; i <= lim; i++){
+            setData(data => [...data, trayectory(i, quad_sol)])
         }
+        setGraph(true)
+        setComp(drop_time)
     }
     
     const submissionHandler = (e) => {
@@ -76,7 +76,7 @@ const Calculator = () => {
             angle_rad = Math.atan(quad_sol)
         visuals(quad_sol)
         setAngle((angle_rad * (180 / Math.PI)).toFixed(2) + "°")
-        setComp("100%")
+        //setComp("100%")
     }
 
     const clearHandler = () => {
@@ -88,6 +88,7 @@ const Calculator = () => {
         setTime("")
         setInitial_vs("")
         setDelta_ys("")
+        setGraph(false)
     }
 
     return(
@@ -140,35 +141,38 @@ const Calculator = () => {
                     </form>
                 </div>
 
-                <div className="overflow-hidden text-right mx-2 pt-8">
-                <div className="">
-                    <div className="inline-block relative z-0 mx-2">
-                        <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 px-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={initial_vs} placeholder=" " style={{borderColor: color}}/>
-                        <label for="floating_standard" class="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Vi</pre></label>
-                    </div>
-                    <div className="inline-block relative z-0 mx-2">
-                        <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 px-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={initial_v_x} placeholder=" " style={{borderColor: color}}/>
-                        <label for="floating_standard" class="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Vi_X</pre></label>
-                    </div>
-                    <div className="inline-block relative z-0 mx-2">
-                        <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 px-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={initial_v_y} placeholder=" " style={{borderColor: color}}/>
-                        <label for="floating_standard" class="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Vi_Y</pre></label>
-                    </div>
-                    <div className="inline-block relative z-0 mx-2">
-                        <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 px-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={time} placeholder=" " style={{borderColor: color}}/>
-                        <label for="floating_standard" class="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Tiempo</pre></label>
-                    </div>
-                    <div className="inline-block relative z-0 ml-2">
-                        <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 px-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={delta_ys} placeholder=" " style={{borderColor: color}}/>
-                        <label for="floating_standard" className="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Δy</pre></label>
-                    </div>
-                </div>
+                <div className="overflow-hidden text-right pt-8">
 
-                <div className="w-3/4 h-96 float-right">
-                    <div className="w-3/4 h-full float-right"><Plot data={data} maxX={max_x} maxY={max_y} className="" /></div>
-                </div>
-                </div>
+                    <div className="w-full inline-block" style={{height:"30.3rem"}}>
+                        <div className="w-3/4 h-full float-right">
+                            {(graph ? (<Plot data={data} maxX={max_x} maxY={max_y} />) : (<div />))}
+                        </div>
+                    </div>
 
+                    <div className="mt-10 -pb-2">
+                        <div className="float-right relative z-0 mx-2">
+                            <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 px-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={initial_vs} placeholder=" " style={{borderColor: color}}/>
+                            <label for="floating_standard" class="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Vi</pre></label>
+                        </div>
+                        <div className="inline-block relative z-0 mx-2">
+                            <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 px-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={initial_v_x} placeholder=" " style={{borderColor: color}}/>
+                            <label for="floating_standard" class="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Vi_X</pre></label>
+                        </div>
+                        <div className="inline-block relative z-0 mx-2">
+                            <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 px-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={initial_v_y} placeholder=" " style={{borderColor: color}}/>
+                            <label for="floating_standard" class="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Vi_Y</pre></label>
+                        </div>
+                        <div className="inline-block relative z-0 mx-2">
+                            <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 px-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={time} placeholder=" " style={{borderColor: color}}/>
+                            <label for="floating_standard" class="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Tiempo</pre></label>
+                        </div>
+                        <div className="inline-block relative z-0 ml-2">
+                            <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 px-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={delta_ys} placeholder=" " style={{borderColor: color}}/>
+                            <label for="floating_standard" className="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Δy</pre></label>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     )
