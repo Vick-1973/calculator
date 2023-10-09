@@ -11,7 +11,7 @@ export const App = () => {
                 {(menu ? (
                     <div className="w-60"><Sidebar /></div>)
                     : <div />)}
-                <div className="overflow-hidden">
+                <div className="overflow-hidden h-screen">
                 <Header />
                     {(page === "calculator" ? <Calculator /> : (
                       page === "math" ? <Math /> : (

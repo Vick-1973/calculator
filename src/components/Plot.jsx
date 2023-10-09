@@ -1,51 +1,53 @@
 import React, { useRef, useEffect } from "react"
-import { select, line, curveCardinal, scaleLinear, axisBottom, axisLeft } from "d3"
+import { select, line, curveCardinal, scaleLinear, axisBottom, axisLeft, area } from "d3"
 import { useStateContext } from "../contexts/ContextProvider"
 
-const Plot = ({ data, maxY, maxX, tgtX, tgtY }) => {
+const Plot = ({ data1, data2, lim, minY, tgtX, tgtY, start }) => {
     const { color } = useStateContext()
-
     const svgRef = useRef()
 
-    /*let coords = []
-    for(let i = 0; i < data.length; i++){
-        coords.push({x: i, y: data[i]})
-    }*/
-
-    let coords = [{x:0, y:0}, {x:1, y:1}, {x:2, y:2}]
-    maxY=10
-    maxX=20
-    tgtX=4
-    tgtY=6
+    let width = 530, height = 440, coords1 = [], coords2 = [], coords3 = [], mid
+    tgtX = width * Number(tgtX) / lim
+    tgtY = height - (height * Number(tgtY) / lim)
+    start = height * Number(start) / lim
+    for(let i = 0; i < data1.length; i++){
+        if(data1[i] != null) coords1.push({x: i, y: data1[i]})
+        else{
+            mid = i-1
+            coords2.push({x: mid, y: data1[mid]})
+            for(let j = i + 1; j < data1.length; j++){
+                coords2.push({x: j, y: data1[j]})
+            }
+            break
+        }
+    }
+    for(let i = 0; i < data2.length; i++){
+        coords3.push({x: i * width / lim, y: (height - (data2[i] * height / lim))})
+    }
 
     useEffect(() => {
         const svg = select(svgRef.current)
-        let width = 530, height = 440, lim = Math.max(maxX, maxY)
-        tgtX = 30 + (width * tgtX / lim)
-        tgtY = 12 + height - (height * tgtY / lim)
+        svg.selectAll("*").remove()
 
         const xScale = scaleLinear()
         .domain([0, lim])
         .range([0, width])
-
         const yScale = scaleLinear()
-        .domain([0, lim])
+        .domain([minY, lim+minY])
         .range([height, 0])
 
-        const xAxis = axisBottom(xScale).ticks(lim/2)
+        const xAxis = axisBottom(xScale).ticks(10)
         svg
         .select(".x-axis")
         .call(xAxis)
-
-        const yAxis = axisLeft(yScale).ticks(lim/2)
+        const yAxis = axisLeft(yScale).ticks(10)
         svg
         .select(".y-axis")
         .call(yAxis)
 
         var axisX = svg.append("g")
-        .attr("transform", `translate(30, ${height+12})`)
+        .attr("transform", `translate(35, ${12 + (height * (lim + minY) / lim)})`)
         .call(xAxis)
-
         axisX.selectAll("line")
         .style("stroke", "white")
         axisX.selectAll("path")
@@ -55,12 +57,11 @@ const Plot = ({ data, maxY, maxX, tgtX, tgtY }) => {
         .style("color", "white")
         .style("font-family", "consolas")
         .style("font-size", 14)
-        
+        .style('fill-opacity', d => d === 0 ? 0.0 : 1.0)
 
         var axisY = svg.append("g")
-        .attr("transform", "translate(30, 12)")
+        .attr("transform", "translate(35, 12)")
         .call(yAxis)
-
         axisY.selectAll("line")
         .style("stroke", "white")
         axisY.selectAll("path")
@@ -71,21 +72,42 @@ const Plot = ({ data, maxY, maxX, tgtX, tgtY }) => {
         .style("font-family", "consolas")
         .style("font-size", 14)
 
-        const myLine = line()
+        const graphLine1 = line()
         .x((d, i) => xScale(i))
         .y((d) => yScale(d.y))
         .curve(curveCardinal)
 
+        const graphLine2 = line()
+        .x((d, i) => xScale(i))
+        .y((d) => yScale(d.y))
+        .curve(curveCardinal)
+
+        const ar = area() 
+        .x((p) => p.x) 
+        .y0((p) => (height + (start > 0 ? start : 0))) 
+        .y1((p) => p.y); 
+
         svg
         .selectAll(".line")
-        .data([coords])
+        .data([coords1])
         .join("path")
         .attr("class", "line")
-        .attr("d", myLine)
+        .attr("d", graphLine1)
         .attr("fill", "none")
         .attr("stroke", color)
-        .attr("stroke-width", 3)
-        .attr("transform", "translate(30, 12)")
+        .attr("stroke-width", 4)
+        .attr("transform", `translate(35, ${12 - (start > 0 ? start : 0) - (height * minY / lim)})`)
+
+        svg
+        .append("path")
+        .data([coords2])
+        .attr("class", "line")
+        .attr("d", graphLine2)
+        .attr("fill", "none")
+        .attr("stroke", color)
+        .attr("stroke-dasharray", ("3, 3"))
+        .attr("stroke-width", 4)
+        .attr("transform", `translate(${35 + (width * mid / lim)}, ${12 - (start > 0 ? start : 0) - (height * minY / lim)})`)
 
         svg
         .append("circle")
@@ -94,10 +116,20 @@ const Plot = ({ data, maxY, maxX, tgtX, tgtY }) => {
         .attr("stroke", color)
         .attr("cx", tgtX)
         .attr("cy", tgtY)
-    }, [coords])
+        .attr("transform", `translate(35, ${12 + (height * minY / lim)})`)
+
+        svg 
+        .append("path") 
+        .attr("d", ar(coords3)) 
+        .attr("fill", color) 
+        .attr("stroke", "none")
+        .attr("opacity", "0.05")
+        .attr("transform", `translate(35, ${12 - (start > 0 ? start : 0)})`)
+
+    }, [coords1, coords2, coords3])
 
     return (
-        <svg ref={svgRef} className="w-full h-full border-2 rounded-xl bg-main-dark-bg" style={{borderColor: color}} />
+        <svg ref={svgRef} className="float-right h-full border-2 rounded-xl bg-main-dark-bg" style={{borderColor: color, width: "36.5rem"}} />
     )
 }
 

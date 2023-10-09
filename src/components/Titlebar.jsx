@@ -1,6 +1,4 @@
-import { useEffect } from "react"
 import { IoCloseOutline, IoContractOutline, IoExpandOutline, IoRemove } from "react-icons/io5"
-import logo from "../assets/logo.png"
 import { useStateContext } from '../contexts/ContextProvider';
 
 const { getCurrentWindow, app } = window.require("@electron/remote")
@@ -17,7 +15,7 @@ export const Titlebar = () => {
     const onQuit = () => app.quit()
 
     return (
-        <div className="title-bar sticky top-0">
+        <div className="title-bar sticky top-0" style={{background: "#09090a"}}>
             <div className="absolute pt-1 pl-32 w-5/6 app-name-container select-none">
                 <p>Rotas Calculator</p>
             </div>

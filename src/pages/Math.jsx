@@ -19,7 +19,7 @@ const Math = () => {
     return (
         <div>
             math yoo
-            <Plot data={data} />
+            
         </div>
     )
 }
