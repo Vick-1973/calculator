@@ -2,11 +2,11 @@ import React, { useRef, useEffect } from "react"
 import { select, line, curveCardinal, scaleLinear, axisBottom, axisLeft, area } from "d3"
 import { useStateContext } from "../contexts/ContextProvider"
 
-const Plot = ({ data1, data2, lim, minY, tgtX, tgtY, start }) => {
+const Plot = ({ data1, data2, maxX, minY, maxY, tgtX, tgtY, start }) => {
     const { color } = useStateContext()
     const svgRef = useRef()
 
-    let width = 530, height = 440, coords1 = [], coords2 = [], coords3 = [], mid
+    let width = 530, height = 440, coords1 = [], coords2 = [], coords3 = [], mid, lim = Math.max(maxX, Math.abs(maxY - minY))
     tgtX = width * Number(tgtX) / lim
     tgtY = height - (height * Number(tgtY) / lim)
     start = height * Number(start) / lim
@@ -84,8 +84,8 @@ const Plot = ({ data1, data2, lim, minY, tgtX, tgtY, start }) => {
 
         const ar = area() 
         .x((p) => p.x) 
-        .y0((p) => (height + (start > 0 ? start : 0))) 
-        .y1((p) => p.y); 
+        .y0((p) => (height + start + ( height - (height * (lim + minY) / lim))))
+        .y1((p) => p.y)
 
         svg
         .selectAll(".line")
@@ -96,7 +96,7 @@ const Plot = ({ data1, data2, lim, minY, tgtX, tgtY, start }) => {
         .attr("fill", "none")
         .attr("stroke", color)
         .attr("stroke-width", 4)
-        .attr("transform", `translate(35, ${12 - (start > 0 ? start : 0) - (height * minY / lim)})`)
+        .attr("transform", `translate(35, ${12 - start})`)
 
         svg
         .append("path")
@@ -107,7 +107,7 @@ const Plot = ({ data1, data2, lim, minY, tgtX, tgtY, start }) => {
         .attr("stroke", color)
         .attr("stroke-dasharray", ("3, 3"))
         .attr("stroke-width", 4)
-        .attr("transform", `translate(${35 + (width * mid / lim)}, ${12 - (start > 0 ? start : 0) - (height * minY / lim)})`)
+        .attr("transform", `translate(${35 + (width * mid / lim)}, ${12 - start})`)
 
         svg
         .append("circle")
@@ -124,7 +124,7 @@ const Plot = ({ data1, data2, lim, minY, tgtX, tgtY, start }) => {
         .attr("fill", color) 
         .attr("stroke", "none")
         .attr("opacity", "0.05")
-        .attr("transform", `translate(35, ${12 - (start > 0 ? start : 0)})`)
+        .attr("transform", `translate(35, ${12 - start  - (height - (height * (lim + minY) / lim))})`)
 
     }, [coords1, coords2, coords3])
 

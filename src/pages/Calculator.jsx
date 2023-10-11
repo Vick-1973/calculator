@@ -46,26 +46,27 @@ const Calculator = () => {
     function visuals(){
         setTrajectory([])
         setMax_range([])
-        setInitial_v_x((initial_v * Math.cos(Math.atan(angle_rad))).toFixed(2))
-        setInitial_v_y((initial_v * Math.sin(Math.atan(angle_rad))).toFixed(2))
-        setTime((initial_v * Math.sqrt(2) / Math.abs(Number(grav))).toFixed(2))
-        setMax_x((initial_v ** 2) / (-1 * Number(grav)))
-        setMax_y((initial_v ** 2) / (-2 * Number(grav)))
-        setInitial_vs(initial_v.toFixed(2))
-        setDelta_y(deltaY)
         let quad_a = Number(grav) / 2,
             quad_b = initial_v * Math.sin(angle_rad),
             quad_c = Number(can_height),
             quad_sol = solveQuadratic(quad_a, quad_b, quad_c, 1),
-            lim = initial_v * Math.cos(angle_rad) * quad_sol
-        for(let i = 0; i <= Math.min(lim, Math.max((initial_v ** 2) / (-1 * Number(grav)), ((initial_v ** 2) / (-2 * Number(grav))) + Number(can_height))); i++){
+            lim_0 = initial_v * Math.cos(angle_rad) * quad_sol,
+            lim_bottom = Math.sqrt(((initial_v ** 2) * ((-2 * Number(can_height) * Number(grav)) + (initial_v ** 2))) / (Number(grav) ** 2)),
+            lim_y = Math.abs(Math.min(0, Math.min(Number(obj_height), Number(can_height))) - Math.max(Number(can_height) + (initial_v ** 2) / (-2 * Number(grav)), Number(obj_height)))
+        for(let i = 0; i <= Math.max(lim_0, Number(delta_x)); i++){
             setTrajectory(trajectory => [...trajectory, calcTrajectory(i, 0)])
             if(i == Number(delta_x)) setTrajectory(trajectory => [...trajectory, null])
         }
-        lim = Math.sqrt(((initial_v ** 2) * ((-2 * Number(can_height) * Number(grav)) + (initial_v ** 2))) / (Number(grav) ** 2))
-        for(let i = 0; i <= Math.min(lim, Math.max((initial_v ** 2) / (-1 * Number(grav)), ((initial_v ** 2) / (-2 * Number(grav))) + Number(can_height))); i++){
+        for(let i = 0; i <= Math.max(Math.max(lim_0, lim_y), lim_bottom); i++){
             setMax_range(max_range => [...max_range, calcTrajectory(i, 1)])
         }
+        setInitial_v_x((initial_v * Math.cos(Math.atan(angle_rad))).toFixed(2))
+        setInitial_v_y((initial_v * Math.sin(Math.atan(angle_rad))).toFixed(2))
+        setTime((initial_v * Math.sqrt(2) / Math.abs(Number(grav))).toFixed(2))
+        setMax_x(Math.max(lim_0, lim_bottom))
+        setMax_y((initial_v ** 2) / (-2 * Number(grav)))
+        setInitial_vs(initial_v.toFixed(2))
+        setDelta_y(deltaY)
         setGraph(true)
     }
     
@@ -159,7 +160,7 @@ const Calculator = () => {
 
                     <div className="w-full inline-block" style={{height:"30.3rem"}}>
                         <div className="w-3/4 h-full float-right">
-                            {(graph ? (<Plot data1={trajectory} data2={max_range} lim={Math.max(Number(max_x), Number(max_y)+Number(can_height))} minY={Math.min(0, Math.min(Number(obj_height), Number(can_height)))} start={can_height} tgtX={delta_x} tgtY={obj_height} />) : (<div />))}
+                            {(graph ? (<Plot data1={trajectory} data2={max_range} maxX={max_x} minY={Math.min(0, Math.min(Number(obj_height), Number(can_height)))} maxY={Math.max(Number(can_height)+Number(max_y), Number(obj_height))} start={can_height} tgtX={delta_x} tgtY={obj_height} />) : (<div />))}
                         </div>
                     </div>
 
