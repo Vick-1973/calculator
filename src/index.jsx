@@ -1,6 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
 import { App } from "./App"
+import { Titlebar } from "./components/Titlebar"
 import { ContextProvider } from './contexts/ContextProvider';
 
 import "react-toastify/dist/ReactToastify.css"

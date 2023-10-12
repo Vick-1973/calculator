@@ -1,5 +1,5 @@
-const { join } = require("path");
-const isDev = require("electron-is-dev");
+const { join } = require("path")
+const isDev = require("electron-is-dev")
 
 let config = {
 	appName: "Rotas Calculator",
@@ -9,6 +9,6 @@ let config = {
 	mainWindow: null,
 	popupWindow: null,
 	isDev,
-};
+}
 
-module.exports = config;
+module.exports = config
