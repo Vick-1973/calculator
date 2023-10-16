@@ -6,10 +6,17 @@ import pic1 from "../assets/graphs.png"
 const Math = () => {
     const { color } = useStateContext()
 
-    const exp1 = `$\\Delta y = v_{i} \\, sin(\\alpha) \\, t + \\frac{1}{2}  g  t^{2}$`,
-          exp2 = `$\\Delta x = v_{i} \\, cos(\\alpha) \\, t$`,
+    const exp1 = `$\\Delta y = v_{i} \\, sin\\left(\\alpha\\right) \\, t + \\frac{1}{2}  g  t^{2}$`,
+          exp2 = `$\\Delta x = v_{i} \\, cos\\left(\\alpha\\right) \\, t$`,
           exp3 = `$\\frac{1}{2}  k  x^{2} = \\frac{1}{2}  m v^{2}$`,
-          exp4 = `$v_{i} = \\sqrt{\\frac{k}{m}}$`
+          exp4 = `$v_{i} = \\sqrt{\\frac{k}{m}}$`,
+          exp5 = `$t = \\frac{\\Delta x}{v_{i} \\, cos\\left(\\alpha\\right)}$`,
+          exp6 = `$\\Delta y = v_{i} \\, sin\\left(\\alpha\\right) \\left( \\frac{\\Delta x}{v_{i} \\, cos\\left(\\alpha\\right)}\\right) + \\frac{1}{2} \\, g  \\left(\\frac{\\Delta x}{v_{i} \\, cos\\left(\\alpha\\right)}\\right)^{2}$`,
+          exp7 = `$\\Delta y = tan\\left(\\alpha\\right) \\Delta x + \\frac{g \\, \\Delta x ^{2} \\, sec^{2}\\left(\\alpha\\right)}{2 v_{i}^{2}}$`,
+          exp8 = `$sec^{2}\\left(\\theta\\right) = tan^{2}\\left(\\theta\\right) + 1$`,
+          exp9 = `$0 = \\left(\\Delta x\\right)  tan\\left(\\alpha\\right) + \\left(\\frac{g \\, \\Delta x ^{2}}{2 v_{i}^{2}}\\right) tan^{2}\\left(\\alpha\\right) + \\left(\\frac{g \\, \\Delta x ^{2} \\, }{2 v_{i}^{2}} - \\Delta y \\right)$`,
+          exp10 = `$\\alpha_{1} = tan^{-1}\\left(z_{1}\\right) $`,
+          exp11 = `$\\alpha_{2} = tan^{-1}\\left(z_{2}\\right)$`
     
     return (
         <div className="m-6 p-6 pt-4 bg-gray-800 rounded-xl h-fit">
@@ -36,14 +43,59 @@ const Math = () => {
                     <img src={pic1} className="w-1/2 border-2 rounded-xl" style={{borderColor: color}} />
                 </div>
                 <br />
-                Podemos ver de la tercera ecuación que la velocidad de salida del proyectil es directamente proporcional al cuadrado de la compresión, por lo que si buscamos tener la velocidad inicial máxima, la compresión del resorte deberá ser del 100%, es decir, 1 metro. Con esta información, podemos despejar la tercera equación para la velocidad inicial.
-                <br />
+                Podemos ver de la tercera ecuación que la velocidad de salida del proyectil es directamente proporcional al cuadrado de la compresión, por lo que si buscamos tener la velocidad inicial máxima, la compresión del resorte deberá ser del 100%, es decir, 1 metro. Con esta información, podemos despejar la tercera equación para la velocidad inicial. Dado que <span style={{color: color}}>k</span> y <span style={{color: color}}>m</span> son valores que conocemos, podemos calcular el valor de la <span style={{color: color}}>velocidad incial</span>.
+                <br /><br />
                 <div className="flex justify-around text-lg">
                     <div className="inline-block text-black text-xl bg-white rounded-xl w-fit p-3">
                         <Latex>{exp4}</Latex>
                     </div>
                 </div>
-                Dado que <span style={{color: color}}>k</span> y <span style={{color: color}}>m</span>
+                <br />
+                Ahora tomamos la ecuación de desplazamiento horizontal, y la despejamos para el <span style={{color: color}}>tiempo</span>. Aunque aún no tenemos la información suficiente para darle un valor, usaremos esta expresión en otras partes de la solución
+                <br /><br />
+                <div className="flex justify-around text-lg">
+                    <div className="inline-block text-black text-xl bg-white rounded-xl w-fit p-3">
+                        <Latex>{exp5}</Latex>
+                    </div>
+                </div>
+                <br />
+                Pasamos a la ecuación de desplazamiento vertical y reemplazamos las <span style={{color: color}}>t</span> con la expresión que obtuvimos anteriormente.
+                <br /><br />
+                <div className="align-center text-lg">
+                    <div className=" text-black text-xl mx-auto bg-white rounded-xl w-fit p-3">
+                        <Latex>{exp6}</Latex>
+                    </div>
+                    <br />
+                    <div className=" text-black text-xl mx-auto bg-white rounded-xl w-fit p-3">
+                        <Latex>{exp7}</Latex>
+                    </div>
+                </div>
+                <br />
+                Aqui podemos usar una identidad trigonométrica para simplificar la ecuación y que el ángulo quede en términos de la misma función.
+                <br /><br />
+                <div className="align-center text-lg">
+                    <div className=" text-black text-xl mx-auto bg-white rounded-xl w-fit p-3">
+                        <Latex>{exp8}</Latex>
+                    </div>
+                    <br />
+                    <div className=" text-black text-xl mx-auto bg-white rounded-xl w-fit p-3">
+                        <Latex>{exp9}</Latex>
+                    </div>
+                </div>
+                <br />
+                Notamos que se forma una ecuación cuadrática en términos de la tangente del ángulo, y además vemos que todos los coeficientes tienen información que ya conocemos, es decir, sí les podemos dar un valor. De esta forma, resolvemos la ecuación con la fórmula general cuadrática y obtenemos dos soluciones.
+                <br /><br />
+                <div className="flex justify-around text-lg">
+                    <div className="inline-block text-black text-xl mx-auto bg-white rounded-xl w-fit p-3">
+                        <Latex>{exp10}</Latex>
+                    </div>
+                    <br />
+                    <div className="inline-block text-black text-xl mx-auto bg-white rounded-xl w-fit p-3">
+                        <Latex>{exp11}</Latex>
+                    </div>
+                </div>
+                <br />
+                
             </div>
         </div>
     )
