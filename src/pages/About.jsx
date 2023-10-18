@@ -5,7 +5,7 @@ const About = () => {
     
     return (
         <div>
-            about yoo
+            About (WIP)
         </div>
     )
 }

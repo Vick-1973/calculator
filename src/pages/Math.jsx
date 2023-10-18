@@ -20,7 +20,7 @@ const Math = () => {
     
     return (
         <div className="m-6 p-6 pt-4 bg-gray-800 rounded-xl h-fit">
-            <p className="mb-3 text-2xl font-bold tracking-tight text-white">Math</p>
+            <p className="mb-3 text-2xl font-bold tracking-tight text-white">Math (WIP)</p>
             <hr className="" />
             <div className="pt-5 text-white text-lg font-normal text-justify">
                 Comenzamos con las ecuaciones de desplazamiento horizontal, desplazamiento vertical, y conservación de energía. De las variables presentes, el usuario ingresa las <span style={{color: color}}>distancias</span> verticales y horizontales, la <span style={{color: color}}>gravedad</span>, la <span style={{color: color}}>masa</span> del proyectil, y la <span style={{color: color}}>constante elástica</span> del resorte.

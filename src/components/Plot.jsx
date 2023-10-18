@@ -2,13 +2,15 @@ import React, { useRef, useEffect } from "react"
 import { select, line, curveCardinal, scaleLinear, axisBottom, axisLeft, area } from "d3"
 import { useStateContext } from "../contexts/ContextProvider"
 
-const Plot = ({ data1, data2, maxX, minY, maxY, tgtX, tgtY, start }) => {
+const Plot = ({ data1, data2, maxX, minY, maxY, tgtX, tgtY, start, obsX, obsY }) => {
     const { color } = useStateContext()
     const svgRef = useRef()
 
     let width = 530, height = 440, coords1 = [], coords2 = [], coords3 = [], mid, lim = Math.max(maxX, Math.abs(maxY - minY))
     tgtX = width * Number(tgtX) / lim
     tgtY = height - (height * Number(tgtY) / lim)
+    obsX = width * Number(obsX) / lim
+    obsY = height - (height * Number(obsY) / lim)
     start = height * Number(start) / lim
     for(let i = 0; i < data1.length; i++){
         if(data1[i] != null) coords1.push({x: i, y: data1[i]})
@@ -116,6 +118,15 @@ const Plot = ({ data1, data2, maxX, minY, maxY, tgtX, tgtY, start }) => {
         .attr("stroke", color)
         .attr("cx", tgtX)
         .attr("cy", tgtY)
+        .attr("transform", `translate(35, ${12 + (height * minY / lim)})`)
+
+        svg
+        .append("circle")
+        .attr("r", 4)
+        .attr("fill", "white")
+        .attr("stroke", "red")
+        .attr("cx", obsX)
+        .attr("cy", obsY)
         .attr("transform", `translate(35, ${12 + (height * minY / lim)})`)
 
         svg 

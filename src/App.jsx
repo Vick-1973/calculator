@@ -6,17 +6,16 @@ export const App = () => {
     const { menu, page } = useStateContext()
 
     return (
-        <div className="absolute w-full bg-main-dark-bg">
-                {(menu ? (
-                    <div className="w-60"><Sidebar /></div>)
-                    : <div />)}
-                <div className="overflow-hidden">
+        <div className="absolute w-full bg-main-dark-bg h-fit">
+            <Titlebar />
                 <Header />
-                    {(page === "calculator" ? <Calculator /> : (
-                        page === "math" ? <Math /> : (
-                        page === "about" ? <About /> : <div>xd</div>
-                    )))}
-                </div>
+                {(menu ? <Sidebar /> : <></>)}
+            <div className="overflow-hidden">
+                {(page === "calculator" ? <Calculator /> : (
+                    page === "math" ? <Math /> : (
+                    page === "about" ? <About /> : <div>xd</div>
+                )))}
+            </div>
         </div>
     )
 }

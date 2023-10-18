@@ -6,7 +6,7 @@ const Header = () => {
     const { color, menu, setMenu, setPage } = useStateContext();
 
     return (
-        <div className="flex justify-between py-2 pr-6 pl-4 relative bg-zinc-900 w-full">
+        <div className="flex justify-between py-2 pr-6 pl-4 bg-zinc-900 w-full sticky top-8">
             <div>
                 <button type="button" onClick={() => setMenu(!menu)} className="relative text-xl rounded-full p-3">
                     <span className="absolute inline-flex rounded-full h-2 w-2 right-2 top-2" />

@@ -12,6 +12,8 @@ const Calculator = () => {
     const [obj_height, setObj_height] = useState(" ")
     const [can_height, setCan_height] = useState(" ")
     const [delta_x, setDelta_x] = useState(" ")
+    const [obs_x, setObs_x] = useState(" ")
+    const [obs_y, setObs_y] = useState(" ")
     const [initial_v_x, setInitial_v_x] = useState("")
     const [initial_v_y, setInitial_v_y] = useState("")
     const [initial_vs, setInitial_vs] = useState("")
@@ -41,6 +43,14 @@ const Calculator = () => {
         if(deltaY > lim + 1) return true
         else if(deltaY > lim) deltaY = lim - 0.001
         return false
+    }
+
+    function obstacleCheck(){
+        let traj_y = (Number(obs_x) * Math.tan(angle_rad) + (Number(grav) * (Number(obs_x) ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle_rad) ** 2))),
+            real_h = Number(obs_y) - Number(can_height)
+        //setComp(`obs ${obs_y} real ${real_h} diff ${traj_y}`)
+        if(Math.abs(traj_y - real_h) >= 0.5) return false
+        return true
     }
 
     function visuals(){
@@ -85,11 +95,14 @@ const Calculator = () => {
             quad_b = deltaX,
             quad_c = ((Number(grav) * (deltaX ** 2)) / (2 * (initial_v ** 2))) - deltaY,
             quad_sol = solveQuadratic(quad_a, quad_b, quad_c, 0)
-        if(quad_sol < 0) quad_sol = solveQuadratic(quad_a, quad_b, quad_c, 1) 
         angle_rad = Math.atan(quad_sol)
+        if(obstacleCheck()){
+            quad_sol = solveQuadratic(quad_a, quad_b, quad_c, 1)
+            angle_rad = Math.atan(quad_sol)
+        }
         visuals()
         setAngle((angle_rad * (180 / Math.PI)).toFixed(2) + "°")
-        //setComp("100%")
+        setComp("100%")
     }
 
     const clearHandler = () => {
@@ -109,6 +122,7 @@ const Calculator = () => {
     }
 
     return(
+        <div className="h-screen bg-main-dark-bg">
         <div className="m-6 p-6 pt-4 bg-gray-800 rounded-xl h-fit">
             <p className="mb-3 text-2xl font-bold tracking-tight text-white">Calculator</p>
             <hr className="" />
@@ -139,6 +153,15 @@ const Calculator = () => {
                             <input onChange={(e) => setDelta_x(e.target.value)} class="w-44 block py-2 px-0 text-sm bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" placeholder=" " style={{borderColor: color}}/>
                             <label for="floating_standard" class="pl-0.5 absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}>Distancia horizontal (m)</label>
                         </div>
+                        <div className="m-6" /><div class="relative z-0 w-48">
+                            <input onChange={(e) => setObs_x(e.target.value)} class="w-44 block py-2 px-0 text-sm bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" placeholder=" " style={{borderColor: color}}/>
+                            <label for="floating_standard" class="pl-0.5 absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}>Coord x obs (m)</label>
+                        </div>
+                        <div className="m-6" /><div class="relative z-0 w-48">
+                            <input onChange={(e) => setObs_y(e.target.value)} class="w-44 block py-2 px-0 text-sm bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" placeholder=" " style={{borderColor: color}}/>
+                            <label for="floating_standard" class="pl-0.5 absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}>Coord y obs (m)</label>
+                        </div>
+
                         <br />
                         <div className="mt-2">
                             <button type="submit" className="p-2 px-3 hover:drop-shadow-xl hover:bg-light-gray text-white" style={{ background: color, borderRadius: '10%' }}>Submit</button>
@@ -160,7 +183,7 @@ const Calculator = () => {
 
                     <div className="w-full inline-block" style={{height:"30.3rem"}}>
                         <div className="w-3/4 h-full float-right">
-                            {(graph ? (<Plot data1={trajectory} data2={max_range} maxX={max_x} minY={Math.min(0, Math.min(Number(obj_height), Number(can_height)))} maxY={Math.max(Number(can_height)+Number(max_y), Number(obj_height))} start={can_height} tgtX={delta_x} tgtY={obj_height} />) : (<div />))}
+                            {(graph ? (<Plot data1={trajectory} data2={max_range} maxX={max_x} minY={Math.min(0, Math.min(Number(obj_height), Number(can_height)))} maxY={Math.max(Number(can_height)+Number(max_y), Number(obj_height))} start={can_height} tgtX={delta_x} tgtY={obj_height} obsX={Number(obs_x)} obsY={Number(obs_y)} />) : (<div />))}
                         </div>
                     </div>
 
@@ -189,6 +212,7 @@ const Calculator = () => {
 
                 </div>
             </div>
+        </div>
         </div>
     )
 }

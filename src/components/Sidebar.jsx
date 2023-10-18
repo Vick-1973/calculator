@@ -6,7 +6,7 @@ export const Sidebar = () => {
     const { setMenu, color, page, setPage } = useStateContext()
 
     return (
-        <div className="w-full float-left h-screen bg-secondary-dark-bg">
+        <div className="w-60 float-left h-screen bg-secondary-dark-bg sticky top-24">
             <div className="items-center ml-5 my-3 h-11">
                 <div className="inline-block">
                     <img src={logo} className="inline-block w-10 mr-3 mb-3" />
