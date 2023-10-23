@@ -104,11 +104,10 @@ const Calculator = () => {
         setGraph(true)
     }
 
-    function solve(override){
+    function solve(factor){
         deltaY = Number(obj_height) - Number(can_height)
         deltaX = Number(delta_x)
-        initial_v = Math.sqrt(Number(const_k) / Number(mass))
-        if(!isNaN(override)) initial_v *= override
+        initial_v = factor * Math.sqrt(Number(const_k) / Number(mass))
         if(deltaX == 0) deltaX = 0.001
         if(safetyCheck()){
             angle_rad = NaN
@@ -121,16 +120,11 @@ const Calculator = () => {
             quad_sol0 = solveQuadratic(quad_a, quad_b, quad_c, 0),
             quad_sol1 = solveQuadratic(quad_a, quad_b, quad_c, 1)
         extremeCases(quad_sol0, quad_sol1)
-        /*angle_rad = Math.atan(quad_sol)
-        if(obstacleCheck()){
-            quad_sol = solveQuadratic(quad_a, quad_b, quad_c, 1)
-            angle_rad = Math.atan(quad_sol)
-        }*/
     }
     
     const submissionHandler = (e) => {
         e.preventDefault()
-        solve(NaN)
+        solve(1)
         visuals()
         setAngle((angle_rad * (180 / Math.PI)).toFixed(2) + "°")
         setComp(compression)
@@ -241,7 +235,7 @@ const Calculator = () => {
                             <label for="floating_standard" class="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Tiempo</pre></label>
                         </div>
                         <div className="inline-block relative z-0 ml-2">
-                            <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 px-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={error} placeholder=" " style={{borderColor: color}}/>
+                            <input disabled="true" autoComplete="off" type="text" className="w-20 block py-2.5 pl-5 text-sm bg-transparent border-2 rounded-lg appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" value={error} placeholder=" " style={{borderColor: color}}/>
                             <label for="floating_standard" class="absolute text-sm bg-slate-800 px-2 -ml-2 text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 -z-15 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" style={{color: color}}><pre>Error</pre></label>
                         </div>
                     </div>
