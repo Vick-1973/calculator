@@ -5,7 +5,6 @@ import pic1 from "../assets/graphs.png"
 
 const Math = () => {
     const { color } = useStateContext()
-
     const exp1 = `$\\Delta y = v_{i} \\, sin\\left(\\alpha\\right) \\, t + \\frac{1}{2}  g  t^{2}$`,
           exp2 = `$\\Delta x = v_{i} \\, cos\\left(\\alpha\\right) \\, t$`,
           exp3 = `$\\frac{1}{2}  k  x^{2} = \\frac{1}{2}  m v^{2}$`,
@@ -24,7 +23,7 @@ const Math = () => {
         <div className="m-6 p-6 pt-4 bg-gray-800 rounded-xl h-fit">
             <p className="mb-3 text-2xl font-bold tracking-tight text-white">Math</p>
             <hr className="" />
-            <div className="pt-5 text-white text-lg font-normal text-justify">
+            <div className="pt-5 text-white text-base font-normal text-justify">
                 Comenzamos con las ecuaciones de desplazamiento horizontal, desplazamiento vertical, y conservación de energía. De las variables presentes, el usuario ingresa las <span style={{color: color}}>distancias</span> verticales y horizontales, la <span style={{color: color}}>gravedad</span>, la <span style={{color: color}}>masa</span> del proyectil, y la <span style={{color: color}}>constante elástica</span> del resorte.
                 <br/><br/>
                 <div className="flex justify-around text-lg">
