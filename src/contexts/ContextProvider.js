@@ -5,7 +5,6 @@ const { getCurrentWindow } = window.require("@electron/remote")
 
 export const ContextProvider = ({ children }) => {
     const currentWindow = getCurrentWindow()
-
     const [maximized, setMaximized] = useState(currentWindow.isMaximized())
     const [color, setColor] = useState("#03C9D7")
     const [menu, setMenu] = useState(false)

@@ -3,7 +3,7 @@ import { useStateContext } from '../contexts/ContextProvider';
 const About = () => {
     const { color, setPage } = useStateContext()
     
-    return (
+    return(
         <div className="m-6 p-6 pt-4 bg-gray-800 rounded-xl">
             <p className="mb-3 text-2xl font-bold tracking-tight text-white">About</p>
             <hr className="" />
