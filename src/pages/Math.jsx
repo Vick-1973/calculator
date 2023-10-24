@@ -16,8 +16,7 @@ const Math = () => {
           exp9 = `$0 = \\left(\\Delta x\\right)  tan\\left(\\alpha\\right) + \\left(\\frac{g \\, \\Delta x ^{2}}{2 v_{i}^{2}}\\right) tan^{2}\\left(\\alpha\\right) + \\left(\\frac{g \\, \\Delta x ^{2} \\, }{2 v_{i}^{2}} - \\Delta y \\right)$`,
           exp10 = `$\\alpha_{1} = tan^{-1}\\left(z_{1}\\right) $`,
           exp11 = `$\\alpha_{2} = tan^{-1}\\left(z_{2}\\right)$`,
-          exp12 = `$y_{max} = \\frac{g x^{2}}{2v_{i}^{2}} - \\frac{v_{i}^{2}}{2g}$`,
-          exp13 = `$y = \\frac{g x^{2}}{2 v_{i}^{2}} -$`
+          exp12 = `$y_{max} = \\frac{g x^{2}}{2v_{i}^{2}} - \\frac{v_{i}^{2}}{2g}$`
     
     return (
         <div className="m-6 p-6 pt-4 bg-gray-800 rounded-xl h-fit">

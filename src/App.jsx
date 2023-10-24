@@ -1,4 +1,4 @@
-import { Math, Calculator, About } from "./pages"
+import { Math, Calculator, About, Code } from "./pages"
 import { Titlebar, Sidebar, Header } from "./components"
 import { useStateContext } from './contexts/ContextProvider'
 
@@ -13,8 +13,10 @@ export const App = () => {
             <div className="overflow-hidden">
                 {(page === "calculator" ? <Calculator /> : (
                     page === "math" ? <Math /> : (
-                    page === "about" ? <About /> : <div>xd</div>
-                )))}
+                    page === "about" ? <About /> : (
+                    page === "code" ? <Code /> : 
+                    <div>xd</div>
+                ))))}
             </div>
         </div>
     )
