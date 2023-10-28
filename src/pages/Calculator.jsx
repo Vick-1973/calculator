@@ -25,7 +25,7 @@ const Calculator = () => {
     const [trajectory, setTrajectory] = useState([])
     const [max_range, setMax_range] = useState([])
     const Form = useRef(null)
-    let deltaY, deltaX, initial_v, angle_rad, compression = "100"
+    let deltaY, deltaX, initial_v, angle_rad0, angle_rad1, angle_rad2, compression = 1
 
     function solveQuadratic(a, b, c){
         let disc = (b ** 2) - (4 * a * c)
@@ -34,7 +34,7 @@ const Calculator = () => {
     }
 
     function calcTrajectory(x, type){
-        if(type === 0) return (x * Math.tan(angle_rad) + (Number(grav) * (x ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle_rad) ** 2)))
+        if(type === 0) return (x * Math.tan(angle_rad0) + (Number(grav) * (x ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle_rad0) ** 2)))
         else return (Number(grav) * (x ** 2)) / (2 * (initial_v ** 2)) + ((initial_v ** 2) / (-2 * Number(grav)))
     }
 
@@ -45,33 +45,24 @@ const Calculator = () => {
         return false
     }
 
-    function obstacleCheck(){
-        let traj_y = (Number(obs_x) * Math.tan(angle_rad) + (Number(grav) * (Number(obs_x) ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle_rad) ** 2))),
-            real_h = Number(obs_y) - Number(can_height),
-            diff = Math.abs(traj_y - real_h)
-        setError(diff.toFixed(2))
-        if(diff >= 0.5) return false
-        setError(diff.toFixed(2) + " *")
-        return true
+    function obstacleDelta(angle){
+        let traj_y = (Number(obs_x) * Math.tan(angle) + (Number(grav) * (Number(obs_x) ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle) ** 2))),
+            real_h = Number(obs_y) - Number(can_height)
+        return Math.abs(traj_y - real_h)
     }
 
-    function extremeCases(quad_sols){
-        if(quad_sols[0] < 0){
-            angle_rad = Math.atan(quad_sols[1])
-            if(obstacleCheck()){
-                solve(0.9)
-                compression = "90"
-            }
+    function extremeCases(){
+        if(angle_rad1 < 0){
+            if(obstacleDelta(angle_rad2) >= 0.5) angle_rad0 = angle_rad2
+            else solve(compression - 0.05)
+        }
+        else if(angle_rad2 < 0){
+            if(obstacleDelta(angle_rad1) >= 0.5) angle_rad0 = angle_rad1
+            else solve(compression - 0.05)
         }
         else{
-            angle_rad = Math.atan(quad_sols[0])
-            if(obstacleCheck()){
-                if(quad_sols[1] < 0){
-                    solve(0.9)
-                    compression = "90"
-                }
-                else angle_rad = Math.atan(quad_sols[1])
-            }
+            if(obstacleDelta(angle_rad1) >= obstacleDelta(angle_rad2)) angle_rad0 = angle_rad1
+            else angle_rad0 = angle_rad2
         }
     }
 
@@ -79,27 +70,30 @@ const Calculator = () => {
         setTrajectory([])
         setMax_range([])
         let quad_a = Number(grav) / 2,
-            quad_b = initial_v * Math.sin(angle_rad),
+            quad_b = initial_v * Math.sin(angle_rad0),
             quad_c = Number(can_height),
             quad_sol = solveQuadratic(quad_a, quad_b, quad_c)[1],
-            lim_0 = initial_v * Math.cos(angle_rad) * quad_sol,
+            lim_0 = initial_v * Math.cos(angle_rad0) * quad_sol,
             lim_bottom = Math.sqrt(((initial_v ** 2) * ((-2 * Number(can_height) * Number(grav)) + (initial_v ** 2))) / (Number(grav) ** 2)),
-            lim_y = Math.abs(Math.min(0, Math.min(Number(obj_height), Number(can_height))) - Math.max(Number(can_height) + (initial_v ** 2) / (-2 * Number(grav)), Number(obj_height)))
+            lim_y = Math.abs(Math.min(0, Math.min(Number(obj_height), Number(can_height))) - Math.max(Number(can_height) + (initial_v ** 2) / (-2 * Number(grav)), Number(obj_height))),
+            traj_y = (Number(obs_x) * Math.tan(angle_rad0) + (Number(grav) * (Number(obs_x) ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle_rad0) ** 2))),
+            real_h = Number(obs_y) - Number(can_height)
         for(let i = 0; i <= Math.max(lim_0, Number(delta_x)); i++){
             setTrajectory(trajectory => [...trajectory, calcTrajectory(i, 0)])
-            if(i == Number(delta_x)) setTrajectory(trajectory => [...trajectory, null])
+            if(i === Number(delta_x)) setTrajectory(trajectory => [...trajectory, null])
         }
         setTrajectory(trajectory => [...trajectory, calcTrajectory(Math.max(lim_0, Number(delta_x)), 0)])
         for(let i = 0; i <= Math.max(Math.max(lim_0, lim_y), lim_bottom); i++){
             setMax_range(max_range => [...max_range, calcTrajectory(i, 1)])
         }
-        setInitial_v_x((initial_v * Math.cos(Math.atan(angle_rad))).toFixed(2))
-        setInitial_v_y((initial_v * Math.sin(Math.atan(angle_rad))).toFixed(2))
-        setTime((deltaX / (initial_v * Math.cos(Math.atan(angle_rad)))).toFixed(2))
+        setInitial_v_x((initial_v * Math.cos(Math.atan(angle_rad0))).toFixed(2))
+        setInitial_v_y((initial_v * Math.sin(Math.atan(angle_rad0))).toFixed(2))
+        setTime((deltaX / (initial_v * Math.cos(Math.atan(angle_rad0)))).toFixed(2))
         setMax_x(Math.max(lim_0, lim_bottom))
         setMax_y((initial_v ** 2) / (-2 * Number(grav)))
         setInitial_vs(initial_v.toFixed(2))
         setDelta_y(deltaY)
+        setError(Number(obs_x) > Math.max(lim_0, Number(delta_x)) ? NaN : (traj_y - real_h).toFixed(2))
         setGraph(true)
     }
 
@@ -107,25 +101,29 @@ const Calculator = () => {
         deltaY = Number(obj_height) - Number(can_height)
         deltaX = Number(delta_x)
         initial_v = factor * Math.sqrt(Number(const_k) / Number(mass))
-        if(deltaX == 0) deltaX = 0.001
+        if(deltaX === 0) deltaX = 0.001
         if(safetyCheck()){
-            angle_rad = NaN
-            compression = "No solution"
-            return
+            setAngle("No solution")
+            setComp("No solution")
+            return true
         }
         let quad_a = (Number(grav) * (deltaX ** 2)) / (2 * (initial_v ** 2)),
             quad_b = deltaX,
             quad_c = ((Number(grav) * (deltaX ** 2)) / (2 * (initial_v ** 2))) - deltaY,
             quad_sols = solveQuadratic(quad_a, quad_b, quad_c)
-        extremeCases(quad_sols)
+        angle_rad1 = Math.atan(quad_sols[0])
+        angle_rad2 = Math.atan(quad_sols[1])
+        compression = factor
+        extremeCases()
+        return false
     }
     
     const submissionHandler = (e) => {
         e.preventDefault()
-        solve(1)
+        if(solve(1)) return
         visuals()
-        setAngle((angle_rad * (180 / Math.PI)).toFixed(2) + "°")
-        setComp(compression + "%")
+        setAngle((angle_rad0 * (180 / Math.PI)).toFixed(2) + "°")
+        setComp((compression * 100) + "%")
     }
 
     const clearHandler = () => {
@@ -142,6 +140,7 @@ const Calculator = () => {
         setTime("")
         setInitial_vs("")
         setDelta_y("")
+        setError("")
     }
 
     return(

@@ -2,6 +2,8 @@ import { useStateContext } from '../contexts/ContextProvider';
 import pic1 from "../assets/subm.png"
 import pic2 from "../assets/solve.png"
 import pic3 from "../assets/quad.png"
+import pic4 from "../assets/safety.png"
+import pic5 from "../assets/traj.png"
 
 const Code = () => {
     const { color, setPage } = useStateContext()
@@ -23,16 +25,25 @@ const Code = () => {
                 <hr className="mb-3" />
                 Es una función de apoyo que aplica la fórmula general cuadrática. Recibe los coeficientes de una ecuación cuadrática como argumentos, y regresa un arreglo con las dos soluciones, o un <span style={{color: color}}>NaN</span> si es que no hay ninguna.
                 <div className="flex justify-center">
-                    <img src={pic3} className="w-3/5" style={{borderColor: color}} />
+                    <img src={pic3} className="w-2/3" style={{borderColor: color}} />
+                </div>
+
+                <p className="text-xl font-bold mb-1" style={{color:color}}>
+                    calcTrajectory
+                </p>
+                <hr className="mb-3" />
+                Calcula la altura de la trayectoria del proyectil dada la distancia en el argumento. Puede utilizarse también para calcular la altura del <span style={{color: color}}>rango máximo</span>.
+                <div className="flex justify-center">
+                    <img src={pic5} className="w-7/8" style={{borderColor: color}} />
                 </div>
 
                 <p className="text-xl font-bold mb-1" style={{color:color}}>
                     sumbissionHandler
                 </p>
                 <hr className="mb-3" />
-                Esta función de tipo <i>handler</i> es llamada directamente tras el envio del formulario, y como el comportamiento por defecto es de refrescar la página, por lo que debemos evitar esto explícitamente. Desde aquí llamamos también a las funciones <i>solve()</i> y <i>visuals()</i>, que manejan los cálculos generales y los datos visuales respectivamente. Una vez que se han completado, actualizamos los datos del <span style={{color: color}}>ángulo</span> (que debe ser convertido de radianes a grados) y la <span style={{color: color}}>compresión</span>.
+                Esta función de tipo <i>handler</i> es llaxda directamente tras el envio del formulario, y como el comportamiento por defecto es de refrescar la página, por lo que debemos evitar esto explícitamente. Desde aquí llamamos también a las funciones <i>solve()</i> y <i>visuals()</i>, que manejan los cálculos generales y los datos visuales respectivamente. Una vez que se han completado, actualizamos los datos del <span style={{color: color}}>ángulo</span> (que debe ser convertido de radianes a grados) y la <span style={{color: color}}>compresión</span>.
                 <div className="flex justify-center">
-                    <img src={pic1} className="w-1/2" style={{borderColor: color}} />
+                    <img src={pic1} className="w-7/12" style={{borderColor: color}} />
                 </div>
 
                 <p className="text-xl font-bold mb-1" style={{color:color}}>
@@ -43,13 +54,18 @@ const Code = () => {
                 <br /><br />
                 Hacemos una revisión con la función de <i>safetyCheck()</i>. Si el objetivo esta fuera de rango, se define que no hay solución y salimos de la función. Finalmente asignamos los coeficientes para la ecuación cuadrática del procedimiento, y pasamos los resultados obtenidos de <i>solveQuadratic()</i> a <i>extremeCases()</i>, que maneja los casos extremos para revisar que no haya problemas con las soluciones. 
                 <div className="flex justify-center">
-                    <img src={pic2} className="w-3/5" style={{borderColor: color}} />
+                    <img src={pic2} className="w-2/3" style={{borderColor: color}} />
                 </div>
+
                 <p className="text-xl font-bold mb-1" style={{color:color}}>
                     safetyCheck
                 </p>
                 <hr className="mb-3" />
                 Verifica que las coordenadas del objetivo se encuentren dentro del <span style={{color: color}}>rango máximo</span> con una tolerancia de 0.001 metros
+                <div className="flex justify-center">
+                    <img src={pic4} className="w-5/6" style={{borderColor: color}} />
+                </div>
+
             </div>
         </div>
     )

@@ -25,11 +25,11 @@ export const Sidebar = () => {
                 <button className="w-full text-left" onClick={() => setPage("math")}>
                     <p className="m-3 ml-2 pl-4 p-3 rounded-lg text-white hover:text-gray-700 hover:bg-light-gray" style={{background: (page === "math" ? color : ''), color: (page === "math" ? "white" : "")}}>Math</p>
                 </button>
-                <button className="w-full text-left" onClick={() => setPage("about")}>
-                    <p className="m-3 ml-2 -my-1 pl-4 p-3 rounded-lg text-white hover:text-gray-700 hover:bg-light-gray" style={{background: (page === "about" ? color : ''), color: (page === "about" ? "white" : "")}}>About</p>
-                </button>
                 <button className="w-full text-left" onClick={() => setPage("code")}>
-                    <p className="m-3 ml-2 pl-4 p-3 rounded-lg text-white hover:text-gray-700 hover:bg-light-gray" style={{background: (page === "code" ? color : ''), color: (page === "code" ? "white" : "")}}>Code</p>
+                    <p className="m-3 ml-2 -my-1 pl-4 p-3 rounded-lg text-white hover:text-gray-700 hover:bg-light-gray" style={{background: (page === "code" ? color : ''), color: (page === "code" ? "white" : "")}}>Code</p>
+                </button>
+                <button className="w-full text-left" onClick={() => setPage("about")}>
+                    <p className="m-3 ml-2 pl-4 p-3 rounded-lg text-white hover:text-gray-700 hover:bg-light-gray" style={{background: (page === "about" ? color : ''), color: (page === "about" ? "white" : "")}}>About</p>
                 </button>
             </div>
         </div>
