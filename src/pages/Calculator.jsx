@@ -4,27 +4,27 @@ import { Plot } from "../components"
 
 const Calculator = () => {
     const { color, graph, setGraph } = useStateContext()
-    const [angle, setAngle] = useState("")
-    const [comp, setComp] = useState("")
-    const [mass, setMass] = useState(" ")
-    const [grav, setGrav] = useState(" ")
-    const [const_k, setConst_k] = useState(" ")
-    const [obj_height, setObj_height] = useState(" ")
-    const [can_height, setCan_height] = useState(" ")
-    const [delta_x, setDelta_x] = useState(" ")
-    const [delta_y, setDelta_y] = useState("")
-    const [obs_x, setObs_x] = useState(" ")
-    const [obs_y, setObs_y] = useState(" ")
-    const [initial_v_x, setInitial_v_x] = useState("")
-    const [initial_v_y, setInitial_v_y] = useState("")
-    const [initial_vs, setInitial_vs] = useState("")
-    const [time, setTime] = useState("")
-    const [error, setError] = useState("")
-    const [max_x, setMax_x] = useState("")
-    const [max_y, setMax_y] = useState("")
-    const [trajectory, setTrajectory] = useState([])
-    const [max_range, setMax_range] = useState([])
-    const Form = useRef(null)
+    const [angle, setAngle] = useState(""),
+          [comp, setComp] = useState(""),
+          [mass, setMass] = useState(" "),
+          [grav, setGrav] = useState(" "),
+          [const_k, setConst_k] = useState(" "),
+          [obj_height, setObj_height] = useState(" "),
+          [can_height, setCan_height] = useState(" "),
+          [delta_x, setDelta_x] = useState(" "),
+          [delta_y, setDelta_y] = useState(""),
+          [obs_x, setObs_x] = useState(" "),
+          [obs_y, setObs_y] = useState(" "),
+          [initial_v_x, setInitial_v_x] = useState(""),
+          [initial_v_y, setInitial_v_y] = useState(""),
+          [initial_vs, setInitial_vs] = useState(""),
+          [time, setTime] = useState(""),
+          [error, setError] = useState(""),
+          [max_x, setMax_x] = useState(""),
+          [max_y, setMax_y] = useState(""),
+          [trajectory, setTrajectory] = useState([]),
+          [max_range, setMax_range] = useState([]),
+          Form = useRef(null)
     let deltaY, deltaX, initial_v, angle_rad0, angle_rad1, angle_rad2, compression = 1
 
     function solveQuadratic(a, b, c){
@@ -39,13 +39,15 @@ const Calculator = () => {
     }
 
     function safetyCheck(){
-        let lim = (Number(grav) * (Number(delta_x) ** 2)) / (2 * (initial_v ** 2)) + ((initial_v ** 2) / (-2 * Number(grav)))
+        let lim = (Number(grav) * (deltaX ** 2)) / (2 * (initial_v ** 2)) + ((initial_v ** 2) / (-2 * Number(grav)))
         if(deltaY > lim + 1) return true
         else if(deltaY > lim) deltaY = lim - 0.001
         return false
     }
 
+    //Note: no se sabe si puede golpear al obstáculo DESPUES del objetivo
     function obstacleDelta(angle){
+        if(Number(obs_x) > deltaX) return Infinity
         let traj_y = (Number(obs_x) * Math.tan(angle) + (Number(grav) * (Number(obs_x) ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle) ** 2))),
             real_h = Number(obs_y) - Number(can_height)
         return Math.abs(traj_y - real_h)
@@ -78,9 +80,9 @@ const Calculator = () => {
             lim_y = Math.abs(Math.min(0, Math.min(Number(obj_height), Number(can_height))) - Math.max(Number(can_height) + (initial_v ** 2) / (-2 * Number(grav)), Number(obj_height))),
             traj_y = (Number(obs_x) * Math.tan(angle_rad0) + (Number(grav) * (Number(obs_x) ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle_rad0) ** 2))),
             real_h = Number(obs_y) - Number(can_height)
-        for(let i = 0; i <= Math.max(lim_0, Number(delta_x)); i++){
+        for(let i = 0; i <= Math.max(lim_0, deltaX); i++){
             setTrajectory(trajectory => [...trajectory, calcTrajectory(i, 0)])
-            if(i === Number(delta_x)) setTrajectory(trajectory => [...trajectory, null])
+            if(i === deltaX) setTrajectory(trajectory => [...trajectory, null])
         }
         setTrajectory(trajectory => [...trajectory, calcTrajectory(Math.max(lim_0, Number(delta_x)), 0)])
         for(let i = 0; i <= Math.max(Math.max(lim_0, lim_y), lim_bottom); i++){
@@ -93,7 +95,7 @@ const Calculator = () => {
         setMax_y((initial_v ** 2) / (-2 * Number(grav)))
         setInitial_vs(initial_v.toFixed(2))
         setDelta_y(deltaY)
-        setError(Number(obs_x) > Math.max(lim_0, Number(delta_x)) ? NaN : (traj_y - real_h).toFixed(2))
+        setError(Number(obs_x) > deltaX ? NaN : (traj_y - real_h).toFixed(2))
         setGraph(true)
     }
 

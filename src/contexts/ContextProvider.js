@@ -8,7 +8,7 @@ export const ContextProvider = ({ children }) => {
     const [maximized, setMaximized] = useState(currentWindow.isMaximized())
     const [color, setColor] = useState("#03C9D7")
     const [menu, setMenu] = useState(false)
-    const [page, setPage] = useState("code")
+    const [page, setPage] = useState("calculator")
     const [graph, setGraph] = useState(false)
 
     return (
