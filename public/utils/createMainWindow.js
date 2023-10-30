@@ -15,8 +15,8 @@ exports.createMainWindow = async () => {
 			contextIsolation: false,
 		},
 		frame: false,
-		icon: config.icon,
-		title: config.appName,
+		icon: join(__dirname, "..", "/favicon.ico"),
+		title: "Rotas Calculator",
 	})
 
 	remote.enable(window.webContents)

@@ -6,7 +6,7 @@ export const App = () => {
     const { menu, page } = useStateContext()
 
     return (
-        <div className="absolute w-full bg-main-dark-bg h-fit">
+        <div className="absolute w-full select-none bg-main-dark-bg h-fit">
             <Titlebar />
                 <Header />
                 {(menu ? <Sidebar /> : <></>)}

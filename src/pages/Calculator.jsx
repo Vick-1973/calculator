@@ -88,9 +88,9 @@ const Calculator = () => {
         for(let i = 0; i <= Math.max(Math.max(lim_0, lim_y), lim_bottom); i++){
             setMax_range(max_range => [...max_range, calcTrajectory(i, 1)])
         }
-        setInitial_v_x((initial_v * Math.cos(Math.atan(angle_rad0))).toFixed(2))
-        setInitial_v_y((initial_v * Math.sin(Math.atan(angle_rad0))).toFixed(2))
-        setTime((deltaX / (initial_v * Math.cos(Math.atan(angle_rad0)))).toFixed(2))
+        setInitial_v_x((initial_v * Math.cos(angle_rad0)).toFixed(2))
+        setInitial_v_y((initial_v * Math.sin(angle_rad0)).toFixed(2))
+        setTime((deltaX / (initial_v * Math.cos(angle_rad0))).toFixed(2))
         setMax_x(Math.max(lim_0, lim_bottom))
         setMax_y((initial_v ** 2) / (-2 * Number(grav)))
         setInitial_vs(initial_v.toFixed(2))

@@ -42,7 +42,7 @@ const About = () => {
                 <p className="text-base font-bold text-white mt-5">
                     - ¿Cómo se usa?
                 </p>
-                <p className="text-base font-bold text-white">
+                <p className="text-base text-white">
                     La función principal de este programa se encuentra en <button onClick={() => setPage("calculator")}><span className="hover:underline" style={{color:color}}>Calculator</span></button>. Aqui puedes ingresar los datos necesarios (con unidades del sistema internacional) y hacer click en 'Submit' para ver los resultados. En caso de que no exista una solución posible, se mostrara 'NaN' en los resultados. Para hacer cambios, puedes modificar los datos directamente o hacer click en 'Clear' para limpiar todos los datos. 
                 </p>
 
