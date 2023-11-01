@@ -113,7 +113,7 @@ const Plot = ({ data1, data2, maxX, minY, maxY, tgtX, tgtY, start, obsX, obsY })
 
         svg
         .append("circle")
-        .attr("r", 4)
+        .attr("r", 5)
         .attr("fill", "white")
         .attr("stroke", color)
         .attr("cx", tgtX)
@@ -122,7 +122,7 @@ const Plot = ({ data1, data2, maxX, minY, maxY, tgtX, tgtY, start, obsX, obsY })
 
         svg
         .append("circle")
-        .attr("r", 4)
+        .attr("r", 5)
         .attr("fill", "white")
         .attr("stroke", "red")
         .attr("cx", obsX)
@@ -134,8 +134,40 @@ const Plot = ({ data1, data2, maxX, minY, maxY, tgtX, tgtY, start, obsX, obsY })
         .attr("d", ar(coords3)) 
         .attr("fill", color) 
         .attr("stroke", "none")
-        .attr("opacity", "0.05")
+        .attr("opacity", "0.15")
         .attr("transform", `translate(35, ${12 - start  - (height - (height * (lim + minY) / lim))})`)
+
+        svg
+        .append("text")
+        .text("Objetivo")
+        .attr("x", width - 40)
+        .attr("y", 25)
+        .attr("fill", "white")
+        .attr("font-size", "16")
+
+        svg
+        .append("circle")
+        .attr("r", 4)
+        .attr("fill", "white")
+        .attr("stroke", color)
+        .attr("cx", width - 50)
+        .attr("cy", 20)
+
+        svg
+        .append("text")
+        .text("Obstáculo")
+        .attr("x", width - 40)
+        .attr("y", 50)
+        .attr("fill", "white")
+        .attr("font-size", "16")
+
+        svg
+        .append("circle")
+        .attr("r", 4)
+        .attr("fill", "white")
+        .attr("stroke", "red")
+        .attr("cx", width - 50)
+        .attr("cy", 45)
 
     }, [coords1, coords2, coords3])
 

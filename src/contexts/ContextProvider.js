@@ -9,13 +9,13 @@ export const ContextProvider = ({ children }) => {
     const [color, setColor] = useState("#03C9D7")
     const [menu, setMenu] = useState(false)
     const [page, setPage] = useState("calculator")
-    const [graph, setGraph] = useState(false)
+    const [graph, setGraph] = useState(true)
 
     return (
         <StateContext.Provider value={{ color, setColor, menu, setMenu, maximized, setMaximized, page, setPage, graph, setGraph }}>
             {children}
         </StateContext.Provider>
-    );
-};
+    )
+}
 
-export const useStateContext = () => useContext(StateContext);
+export const useStateContext = () => useContext(StateContext)

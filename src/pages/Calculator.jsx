@@ -34,12 +34,12 @@ const Calculator = () => {
     }
 
     function calcTrajectory(x, type){
-        if(type === 0) return (x * Math.tan(angle_rad0) + (Number(grav) * (x ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle_rad0) ** 2)))
-        else return (Number(grav) * (x ** 2)) / (2 * (initial_v ** 2)) + ((initial_v ** 2) / (-2 * Number(grav)))
+        if(type === 0) return (x * Math.tan(angle_rad0) + (-Number(grav) * (x ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle_rad0) ** 2)))
+        else return (-Number(grav) * (x ** 2)) / (2 * (initial_v ** 2)) + ((initial_v ** 2) / (2 * Number(grav)))
     }
 
     function safetyCheck(){
-        let lim = (Number(grav) * (deltaX ** 2)) / (2 * (initial_v ** 2)) + ((initial_v ** 2) / (-2 * Number(grav)))
+        let lim = (-Number(grav) * (deltaX ** 2)) / (2 * (initial_v ** 2)) + ((initial_v ** 2) / (2 * Number(grav)))
         if(deltaY > lim + 1) return true
         else if(deltaY > lim) deltaY = lim - 0.001
         return false
@@ -48,7 +48,7 @@ const Calculator = () => {
     //Note: no se sabe si puede golpear al obstáculo DESPUES del objetivo
     function obstacleDelta(angle){
         if(Number(obs_x) > deltaX) return Infinity
-        let traj_y = (Number(obs_x) * Math.tan(angle) + (Number(grav) * (Number(obs_x) ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle) ** 2))),
+        let traj_y = (Number(obs_x) * Math.tan(angle) + (-Number(grav) * (Number(obs_x) ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle) ** 2))),
             real_h = Number(obs_y) - Number(can_height)
         return Math.abs(traj_y - real_h)
     }
@@ -71,14 +71,14 @@ const Calculator = () => {
     function visuals(){
         setTrajectory([])
         setMax_range([])
-        let quad_a = Number(grav) / 2,
+        let quad_a = -Number(grav) / 2,
             quad_b = initial_v * Math.sin(angle_rad0),
             quad_c = Number(can_height),
             quad_sol = solveQuadratic(quad_a, quad_b, quad_c)[1],
             lim_0 = initial_v * Math.cos(angle_rad0) * quad_sol,
-            lim_bottom = Math.sqrt(((initial_v ** 2) * ((-2 * Number(can_height) * Number(grav)) + (initial_v ** 2))) / (Number(grav) ** 2)),
-            lim_y = Math.abs(Math.min(0, Math.min(Number(obj_height), Number(can_height))) - Math.max(Number(can_height) + (initial_v ** 2) / (-2 * Number(grav)), Number(obj_height))),
-            traj_y = (Number(obs_x) * Math.tan(angle_rad0) + (Number(grav) * (Number(obs_x) ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle_rad0) ** 2))),
+            lim_bottom = Math.sqrt(((initial_v ** 2) * ((2 * Number(can_height) * Number(grav)) + (initial_v ** 2))) / (Number(grav) ** 2)),
+            lim_y = Math.abs(Math.min(0, Math.min(Number(obj_height), Number(can_height))) - Math.max(Number(can_height) + (initial_v ** 2) / (2 * Number(grav)), Number(obj_height))),
+            traj_y = (Number(obs_x) * Math.tan(angle_rad0) + (-Number(grav) * (Number(obs_x) ** 2)) / (2 * (initial_v ** 2) * (Math.cos(angle_rad0) ** 2))),
             real_h = Number(obs_y) - Number(can_height)
         for(let i = 0; i <= Math.max(lim_0, deltaX); i++){
             setTrajectory(trajectory => [...trajectory, calcTrajectory(i, 0)])
@@ -92,7 +92,7 @@ const Calculator = () => {
         setInitial_v_y((initial_v * Math.sin(angle_rad0)).toFixed(2))
         setTime((deltaX / (initial_v * Math.cos(angle_rad0))).toFixed(2))
         setMax_x(Math.max(lim_0, lim_bottom))
-        setMax_y((initial_v ** 2) / (-2 * Number(grav)))
+        setMax_y((initial_v ** 2) / (2 * Number(grav)))
         setInitial_vs(initial_v.toFixed(2))
         setDelta_y(deltaY)
         setError(Number(obs_x) > deltaX ? NaN : (traj_y - real_h).toFixed(2))
@@ -109,9 +109,9 @@ const Calculator = () => {
             setComp("No solution")
             return true
         }
-        let quad_a = (Number(grav) * (deltaX ** 2)) / (2 * (initial_v ** 2)),
+        let quad_a = (-Number(grav) * (deltaX ** 2)) / (2 * (initial_v ** 2)),
             quad_b = deltaX,
-            quad_c = ((Number(grav) * (deltaX ** 2)) / (2 * (initial_v ** 2))) - deltaY,
+            quad_c = ((-Number(grav) * (deltaX ** 2)) / (2 * (initial_v ** 2))) - deltaY,
             quad_sols = solveQuadratic(quad_a, quad_b, quad_c)
         angle_rad1 = Math.atan(quad_sols[0])
         angle_rad2 = Math.atan(quad_sols[1])
