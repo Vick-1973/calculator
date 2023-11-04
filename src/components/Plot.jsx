@@ -134,7 +134,7 @@ const Plot = ({ data1, data2, maxX, minY, maxY, tgtX, tgtY, start, obsX, obsY })
         .attr("d", ar(coords3)) 
         .attr("fill", color) 
         .attr("stroke", "none")
-        .attr("opacity", "0.15")
+        .attr("opacity", "0.1")
         .attr("transform", `translate(35, ${12 - start  - (height - (height * (lim + minY) / lim))})`)
 
         svg
@@ -168,6 +168,23 @@ const Plot = ({ data1, data2, maxX, minY, maxY, tgtX, tgtY, start, obsX, obsY })
         .attr("stroke", "red")
         .attr("cx", width - 50)
         .attr("cy", 45)
+
+        svg
+        .append("text")
+        .text("Rango")
+        .attr("x", width - 40)
+        .attr("y", 75)
+        .attr("fill", "white")
+        .attr("font-size", "16")
+
+        svg
+        .append("rect")
+        .attr("width", 12)
+        .attr("height", 12)
+        .attr("fill", color)
+        .attr("opacity", "0.3")
+        .attr("x", width - 56)
+        .attr("y", 63)
 
     }, [coords1, coords2, coords3])
 

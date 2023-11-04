@@ -122,6 +122,7 @@ const Calculator = () => {
     
     const submissionHandler = (e) => {
         e.preventDefault()
+        if(mass === " ") return
         if(solve(1)) return
         visuals()
         setAngle((angle_rad0 * (180 / Math.PI)).toFixed(2) + "°")
@@ -129,7 +130,7 @@ const Calculator = () => {
     }
 
     const clearHandler = () => {
-        Form.current.reset();
+        Form.current.reset()
         setGraph(false)
         setTrajectory([])
         setMax_range([])
