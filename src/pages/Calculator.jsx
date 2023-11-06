@@ -55,11 +55,11 @@ const Calculator = () => {
 
     function extremeCases(){
         if(angle_rad1 < 0){
-            if(obstacleDelta(angle_rad2) >= 0.5) angle_rad0 = angle_rad2
+            if(obstacleDelta(angle_rad2) >= 1) angle_rad0 = angle_rad2
             else solve(compression - 0.05)
         }
         else if(angle_rad2 < 0){
-            if(obstacleDelta(angle_rad1) >= 0.5) angle_rad0 = angle_rad1
+            if(obstacleDelta(angle_rad1) >= 1) angle_rad0 = angle_rad1
             else solve(compression - 0.05)
         }
         else{
